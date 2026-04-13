@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "Bash(taskkill /F /IM python.exe)",
+      "Bash(tasklist)",
+      "Bash(findstr /I python)",
+      "Bash(findstr \"python.exe\")",
+      "Bash(taskkill:*)",
+      "Bash(wmic process:*)",
+      "Bash(.venv/Scripts/pip install:*)"
+    ]
+  }
+}

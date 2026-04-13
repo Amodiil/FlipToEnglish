@@ -1,0 +1,16 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Telethon session files
+*.session
+
+# Database
+*.db
+
+# Downloaded media
+media/
