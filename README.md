@@ -1,93 +1,77 @@
 # 🔄 FlipToEnglish
 
-**Turn your daily Ukrainian news scrolling into an English learning opportunity.**
+**Turn your daily news scrolling into a language learning opportunity.**
 
-FlipToEnglish is a Telegram bot that takes news from popular Ukrainian channels, translates them into English at your level, and delivers them to you — just like a regular news feed, but in English.
+## 💡 The idea
 
-## ✨ Features
+I was trying to learn English and realized something simple: the best way to learn a language is to consume content you already enjoy — but in the language you're learning.
 
-- **Real-time news** from 9 Ukrainian Telegram channels
-- **3 English difficulty levels** — Beginner, Intermediate, Advanced
-- **Difficult words highlighted** — tap to see the Ukrainian translation
-- **Smart duplicate detection** — no repeated news in your feed
-- **Full media support** — photos, videos, documents come through intact
-- **Personalized settings** — choose your channels and level per user
+I spend a lot of time scrolling Telegram news channels. What if those same channels could be translated into English, at my level? Not textbook English — real news I actually care about, delivered just like a regular Telegram feed.
+
+That's how FlipToEnglish was born.
+
+## 🧪 Current status: Testing the concept
+
+This is an early-stage experiment. Right now, the bot works specifically for Ukrainian Telegram channels translated into English at 3 difficulty levels. But the vision is much bigger (see [PROJECT.md](PROJECT.md)).
+
+### What works today
+
+- Real-time news collection from 9 Ukrainian Telegram channels
+- AI-powered translation into 3 English levels:
+  - 🟢 **Beginner** — simple words, short sentences, many highlighted words
+  - 🔵 **Intermediate** — natural English, only harder words highlighted
+  - 🔴 **Advanced** — like a real English newspaper
+- Difficult words highlighted — tap to see translation
+- Smart duplicate detection across channels
+- Full media support (photos, videos, documents)
+- Personal settings (choose channels, level, preferences)
+- Runs 24/7 on a cloud server
 
 ## 🏗️ Architecture
 
-The system has 3 independent components running simultaneously:
+The system has 3 components running simultaneously:
 
-| Component         | Description                                              |
-|-------------------|----------------------------------------------------------|
-| `collector.py`    | Monitors Ukrainian Telegram channels and saves new posts |
-| `translator.py`   | Translates news into 3 English levels using Claude AI    |
-| `bot.py`          | Delivers translated news to users at their chosen level  |
-
-> For a detailed architecture overview and database schema, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
-
-## 🚀 Quick Start
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/your-username/FlipToEnglish.git
-cd FlipToEnglish
-
-# 2. Create a virtual environment (recommended)
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-.venv\Scripts\activate     # Windows
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Set up environment variables
-cp .env.example .env
-# Edit .env and fill in your real keys
+```
+Ukrainian Telegram Channels
+        ↓
+  collector.py — monitors channels, saves new posts in real-time
+        ↓
+  translator.py — translates each post into 3 English levels using Claude AI
+        ↓
+  bot.py — delivers translated news to each user at their chosen level
 ```
 
-## 🔑 Getting API Keys
+## 🚀 Quick start
 
-| Key                | Where to get it                                                       |
-|--------------------|-----------------------------------------------------------------------|
-| `BOT_TOKEN`        | Talk to [@BotFather](https://t.me/BotFather) on Telegram              |
-| `API_ID` & `API_HASH` | [my.telegram.org/apps](https://my.telegram.org/apps)              |
-| `ANTHROPIC_API_KEY`| [console.anthropic.com](https://console.anthropic.com)                |
-
-## 🏃 Running
-
-You need **3 terminal windows** running at the same time:
+1. Clone the repo: `git clone https://github.com/YOUR_USERNAME/FlipToEnglish.git`
+2. Copy `.env.example` to `.env` and fill in your API keys
+3. Install dependencies: `pip install -r requirements.txt`
+4. Run all 3 components in separate terminals:
 
 ```bash
-# Terminal 1 — Collector (fetches news from Telegram channels)
-python collector.py
-
-# Terminal 2 — Translator (translates news via Claude AI)
-python translator.py
-
-# Terminal 3 — Bot (serves translated news to users)
-python bot.py
+python collector.py    # collects news from channels
+python translator.py   # translates news into 3 levels
+python bot.py          # serves the Telegram bot
 ```
 
-> **Note:** On first run, `collector.py` will ask for your Telegram phone number and a verification code to authenticate via Telethon. After that, the session file keeps you logged in.
+## 🔑 Getting API keys
 
-## 📡 Supported Channels
-
-The bot currently monitors these Ukrainian news channels:
-
-- [@truexanewsua](https://t.me/truexanewsua)
-- [@vanek_nikolaev](https://t.me/vanek_nikolaev)
-- [@u_now](https://t.me/u_now)
-- [@insiderUKR](https://t.me/insiderUKR)
-- [@Tsaplienko](https://t.me/Tsaplienko)
-- [@Ukraine_365News](https://t.me/Ukraine_365News)
-- [@uniannet](https://t.me/uniannet)
-- [@TCH_channel](https://t.me/TCH_channel)
-- [@suspilnenews](https://t.me/suspilnenews)
+| Key | Where to get it |
+|-----|----------------|
+| Telegram Bot Token | Talk to [@BotFather](https://t.me/BotFather) on Telegram |
+| Telegram API ID & Hash | [my.telegram.org/apps](https://my.telegram.org/apps) |
+| Anthropic API Key | [console.anthropic.com](https://console.anthropic.com) |
 
 ## 🤝 Contributing
 
-Pull requests are welcome! Feel free to open issues for bugs or feature requests.
+This project is in its early testing phase and I'm looking for help! See [PROJECT.md](PROJECT.md) for the full vision and roadmap.
+
+Whether you're a developer, designer, language teacher, or just someone learning a language — your ideas and contributions are welcome. Feel free to:
+
+- Open an **Issue** with ideas or bug reports
+- Submit a **Pull Request** with improvements
+- Share your feedback on the concept
 
 ## 📝 License
 
-This project is licensed under the [MIT License](LICENSE).
+MIT — use it, fork it, build on it.

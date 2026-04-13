@@ -1,228 +1,122 @@
-# FlipToEnglish
+# 📋 FlipToEnglish — Project vision and roadmap
 
-Telegram-бот для вивчення англійської через читання українських новин. Користувач обирає улюблені українські канали новин та рівень англійської — і отримує ті самі новини, перекладені англійською мовою свого рівня, зі складними словами підкресленими та перекладеними українською.
+## 🌍 The big picture
+
+FlipToEnglish started as a personal experiment: I wanted to learn English by reading my favorite Ukrainian news channels in English. But the concept goes far beyond that.
+
+**The vision:** A universal Telegram bot that works for any language pair and any country. Imagine:
+
+- A Spanish speaker learning French by reading French news channels — translated to their level
+- A Japanese speaker learning English through their favorite tech channels
+- A German speaker learning Portuguese through Brazilian news
+
+The core idea is simple: **people already scroll through content every day. Let's turn that habit into a learning opportunity.** No textbooks, no homework, no pressure — just your regular feed, but in the language you're learning.
+
+## 🎯 What makes this different
+
+Most language learning apps force you to learn with artificial content: made-up dialogues, textbook exercises, gamified drills. FlipToEnglish takes a different approach:
+
+- **Real content** — actual news from channels you already follow
+- **Your interests** — you choose what to read, so you're always engaged
+- **Passive learning** — no extra effort, just read your feed as usual
+- **Leveled translation** — the same news adapted to your exact level
+- **Context learning** — learn words in real-world context, not isolated flashcards
+
+## 🗺️ Roadmap
+
+### ✅ Phase 1 — Proof of concept (DONE)
+- Bot works with Ukrainian → English
+- 9 source channels
+- 3 difficulty levels
+- Basic duplicate detection
+- Cloud deployment
+
+### 🔨 Phase 2 — Improve quality (CURRENT)
+- [ ] Better translation quality and consistency
+- [ ] Smarter duplicate detection (semantic similarity, not just text matching)
+- [ ] Fix media handling (albums, videos, documents)
+- [ ] Cleaner UI/UX in the bot
+- [ ] Better word highlighting (only truly difficult words, not random ones)
+- [ ] Stable performance under load
+
+### 🚀 Phase 3 — Learning features
+- [ ] Tap any highlighted word to see translation instantly
+- [ ] Daily vocabulary summary — words you learned today
+- [ ] Vocabulary quiz based on words from the news you read
+- [ ] Progress tracking — how many words you've learned, how many news you've read
+- [ ] Spaced repetition for vocabulary review
+- [ ] Grammar tips based on patterns in the news
+
+### 🌍 Phase 4 — Multi-language support
+- [ ] Support any language pair (not just Ukrainian → English)
+- [ ] User can input any public Telegram channel as a source
+- [ ] Auto-detect source language
+- [ ] Let users choose target language and level
+- [ ] Language-specific difficulty calibration
+
+### 💡 Phase 5 — Smart features
+- [ ] AI-powered content summary (TLDR for each news item)
+- [ ] Topic-based filtering (politics, tech, sports, culture)
+- [ ] Reading time estimates
+- [ ] Pronunciation audio for highlighted words
+- [ ] Community features — share interesting translations, discuss news
+- [ ] Analytics dashboard — what topics help you learn faster
+
+### 📈 Phase 6 — Scale
+- [ ] Multiple bot instances for different language markets
+- [ ] Web version alongside Telegram
+- [ ] API for third-party integrations
+- [ ] Support for other platforms (WhatsApp, Discord)
+
+## 🛠️ Tech stack
+
+| Component | Technology |
+|-----------|-----------|
+| Bot framework | python-telegram-bot |
+| Channel monitoring | Telethon |
+| AI translation | Anthropic Claude API |
+| Database | SQLite (will migrate to PostgreSQL at scale) |
+| Hosting | DigitalOcean |
+| Language | Python 3.14 |
+
+## 🤝 How to contribute
+
+### I'm looking for help with
+
+- **Python developers** — improve the core bot, collector, and translator
+- **AI/NLP specialists** — better translation quality, smarter duplicate detection, word difficulty estimation
+- **UI/UX designers** — make the bot interface cleaner and more intuitive
+- **Language teachers** — help design effective learning features
+- **Testers** — use the bot and report bugs, suggest improvements
+- **Translators** — help adapt the system for other language pairs
+
+### How to get started
+
+1. Fork the repo
+2. Check the [Issues](../../issues) tab for open tasks
+3. Pick something interesting and comment that you're working on it
+4. Submit a Pull Request when ready
+5. Or just open an Issue with your idea!
+
+### Code structure
+
+```
+FlipToEnglish/
+├── bot.py              # Telegram bot — user interface and news delivery
+├── collector.py        # Channel monitor — collects news in real-time
+├── translator.py       # AI translator — translates to 3 levels
+├── requirements.txt    # Python dependencies
+├── .env.example        # Template for API keys
+├── README.md           # Project overview
+├── PROJECT.md          # This file — vision and roadmap
+└── docs/
+    └── ARCHITECTURE.md # Technical architecture details
+```
+
+## 💬 Contact
+
+Have questions or ideas? Open an Issue or reach out. This project is in its early days and every contribution matters.
 
 ---
 
-## Архітектура
-
-Проект складається з трьох незалежних процесів, що працюють паралельно та спілкуються через спільну SQLite базу даних:
-
-```
-Telegram-канали ──► collector.py ──► SQLite DB ──► translator.py ──► SQLite DB ──► bot.py ──► Користувачі
-```
-
-### 1. collector.py — Збір новин
-
-Моніторить публічні Telegram-канали через **Telethon** (клієнт Telegram API) і зберігає нові пости в базу даних.
-
-**Ключові можливості:**
-- Підключення через user-сесію Telethon (потрібна одноразова авторизація по номеру телефону)
-- При запуску підвантажує останній 1 пост з кожного каналу (backfill)
-- У реальному часі слухає нові пости з усіх каналів без обмежень
-- Підтримка медіа-груп (альбомів): визначає `grouped_id`, буферизує повідомлення групи 2 секунди, зберігає всі файли альбому як JSON-масив
-- Завантаження медіа: фото, відео, GIF, документи (ліміт 20 МБ на файл)
-- Дедуплікація: перевірка схожості тексту через `SequenceMatcher` (поріг 72%)
-- Медіа зберігаються локально в папку `media/`
-
-**Підтримувані канали:**
-- @truexanewsua
-- @vanek_nikolaev
-- @u_now
-- @insiderUKR
-- @Tsaplienko
-- @Ukraine_365News
-- @uniannet
-- @TCH_channel
-- @suspilnenews
-
-### 2. translator.py — Переклад новин
-
-Опитує базу на наявність неперекладених новин і перекладає їх за допомогою **Claude API** (модель `claude-haiku-4-5-20251001`).
-
-**Ключові можливості:**
-- Три рівні перекладу:
-  - **Beginner (Початківець)** — прості слова, короткі речення, багато підкреслених слів для перекладу
-  - **Intermediate (Середній)** — звичайна англійська, лише складніші слова підкреслені
-  - **Advanced (Просунутий)** — як справжня англійська газета, без підкреслень
-- Словники: для кожного рівня генерується JSON-словник `{англійське_слово: український_переклад}`
-- Контроль якості перекладу:
-  - `clean_translation()` — видалення подвійних/потрійних підкреслень, підкреслень навколо пробілів і пунктуації, витік HTML/Markdown, обмеження підкреслень до 1-2 слів
-  - `validate_translation()` — перевірка на витік HTML-тегів, зайві підкреслення, занадто багато кирилиці
-  - Повторна спроба перекладу (1 раз) якщо валідація не пройшла
-  - Advanced-переклад повністю очищується від підкреслень
-- Дедуплікація перекладених новин: порівняння через `SequenceMatcher` (поріг 60%) з перекладами за останні 24 години
-- Пакетна обробка: до 5 новин за цикл, 2 секунди між запитами для rate limiting
-- Опитування бази кожні 10 секунд
-
-### 3. bot.py — Telegram-бот для користувачів
-
-Telegram-бот на **python-telegram-bot** (v21.9), що доставляє перекладені новини користувачам.
-
-**Ключові можливості:**
-
-#### Привітання та онбординг
-- При першому `/start` показує повне привітальне повідомлення українською з поясненням як працює бот (один раз, далі — тільки меню)
-- Покрокове налаштування з підказками:
-  1. Після вибору каналів: "Тепер оберіть рівень англійської ➡️"
-  2. Після вибору рівня: "Все готово! Почати читати новини ➡️"
-  3. Якщо рівень обрано без каналів: "Спочатку оберіть канали ➡️"
-
-#### Меню
-- Команди зареєстровані через `set_my_commands` — доступні з гамбургер-меню Telegram:
-  - `/start` — Головне меню
-  - `/channels` — Канали для перекладу
-  - `/level` — Рівень англійської
-  - `/settings` — Налаштування
-  - `/read` — Читати новини
-- Reply-клавіатура: `is_persistent=False`, `one_time_keyboard=True` — не захаращує екран
-- Пункти меню з нумерацією: `1️⃣ Канали`, `2️⃣ Рівень`, `3️⃣ Налаштування`
-
-#### Вибір каналів
-- Inline-клавіатура з чекбоксами для кожного каналу
-- Можливість додати свій канал через запит
-- Кнопка "Готово" фіксує вибір
-
-#### Рівень англійської
-- Три рівні з описами та кольоровими іконками
-- Поточний рівень відмічений галочкою
-
-#### Доставка новин
-- Автоматична доставка: фоновий цикл кожні 30 секунд перевіряє наявність нових перекладених новин для кожного налаштованого користувача
-- Ручна доставка: кнопка "Почати читати новини" або "Наступна ➡️"
-- Підтримка медіа-груп (альбомів): якщо оригінальний пост мав кілька фото/відео, вони надсилаються як альбом через `send_media_group`
-- Фоллбек: якщо медіа не вдалося надіслати — відправляється тільки текст
-- Кнопки до кожної новини:
-  - "Показати українською" — оригінальний текст
-  - "📖 Слова" — словник складних слів з перекладами
-  - "Наступна ➡️" — наступна новина
-
-#### Форматування
-- Підкреслені слова `_word_` конвертуються в HTML `<u>word</u>`
-- Ліміт caption для медіа: 1020 символів
-- Ліміт текстового повідомлення: 4090 символів
-
----
-
-## База даних
-
-SQLite файл: `fliptoenglish.db`
-
-### Таблиця `news`
-
-| Колонка | Тип | Опис |
-|---------|-----|------|
-| id | INTEGER PK | Автоінкремент |
-| channel | TEXT | Канал-джерело (@username) |
-| message_id | INTEGER | ID повідомлення в Telegram |
-| original_text | TEXT | Оригінальний текст українською |
-| media_type | TEXT | Тип першого медіа: photo/video/document |
-| media_file_id | TEXT | Шлях до першого медіафайлу |
-| media_files | TEXT | JSON-масив всіх медіафайлів: `[{"type":"photo","path":"..."},...]` |
-| created_at | TEXT | Час створення (ISO 8601 UTC) |
-| collected_at | TEXT | Час збору колектором |
-| is_duplicate | INTEGER | 1 якщо дублікат |
-| is_translated | INTEGER | 1 якщо перекладено |
-| translation_beginner | TEXT | Переклад рівня beginner |
-| translation_intermediate | TEXT | Переклад рівня intermediate |
-| translation_advanced | TEXT | Переклад рівня advanced |
-| word_list_beginner | TEXT | JSON-словник слів beginner |
-| word_list_intermediate | TEXT | JSON-словник слів intermediate |
-| word_list_advanced | TEXT | JSON-словник слів advanced |
-
-### Таблиця `users`
-
-| Колонка | Тип | Опис |
-|---------|-----|------|
-| user_id | INTEGER PK | Telegram user ID |
-| channels | TEXT | Обрані канали (через кому) |
-| english_level | TEXT | Рівень: beginner/intermediate/advanced |
-| news_per_day | INTEGER | Ліміт новин на день (за замовчуванням 5) |
-| setup_complete | INTEGER | 1 якщо налаштування завершено |
-| welcomed | INTEGER | 1 якщо привітальне повідомлення показано |
-
-### Таблиця `user_news_log`
-
-| Колонка | Тип | Опис |
-|---------|-----|------|
-| user_id | INTEGER | Telegram user ID |
-| news_id | INTEGER | ID новини |
-
-Складений PK `(user_id, news_id)` — відстеження які новини вже доставлено кожному користувачу.
-
----
-
-## Структура файлів
-
-```
-NewsLingo/
-├── bot.py              # Telegram-бот (python-telegram-bot)
-├── collector.py        # Збір новин з каналів (Telethon)
-├── translator.py       # Переклад через Claude API
-├── requirements.txt    # Залежності Python
-├── .env                # Секрети (не в git)
-├── .gitignore          # .env, __pycache__
-├── fliptoenglish.db    # SQLite база (створюється автоматично)
-├── collector.session   # Сесія Telethon (створюється при першому запуску)
-├── media/              # Завантажені медіафайли
-│   ├── channel_123.jpg
-│   ├── channel_456.mp4
-│   └── ...
-└── PROJECT.md          # Цей файл
-```
-
----
-
-## Залежності
-
-```
-python-telegram-bot==21.9    # Бот-фреймворк для Telegram Bot API
-python-dotenv==1.0.1         # Завантаження .env
-telethon                     # Telegram MTProto клієнт для збору новин
-anthropic                    # Claude API SDK для перекладу
-```
-
----
-
-## Налаштування
-
-### Необхідні змінні середовища (.env)
-
-```env
-BOT_TOKEN=<токен бота від @BotFather>
-API_ID=<Telegram API ID з https://my.telegram.org/apps>
-API_HASH=<Telegram API Hash з https://my.telegram.org/apps>
-ANTHROPIC_API_KEY=<ключ API від Anthropic>
-```
-
-### Запуск
-
-Потрібно запустити всі три процеси паралельно:
-
-```bash
-# Термінал 1: збір новин (при першому запуску попросить авторизацію)
-python collector.py
-
-# Термінал 2: переклад
-python translator.py
-
-# Термінал 3: бот
-python bot.py
-```
-
----
-
-## Потік даних
-
-1. **Collector** слухає нові повідомлення з Telegram-каналів
-2. Нове повідомлення зберігається в `news` таблицю з `is_translated = 0`
-3. Якщо пост є частиною альбому (media group) — всі медіафайли групи зберігаються разом
-4. Дублікати позначаються через порівняння тексту (`is_duplicate = 1`)
-5. **Translator** знаходить неперекладені записи, відправляє текст в Claude API
-6. Claude повертає три рівні перекладу + словники, translator очищує та валідує результат
-7. Якщо валідація не пройшла — повторна спроба перекладу (до 2 спроб)
-8. Переклади зберігаються, `is_translated = 1`
-9. **Bot** автоматично (кожні 30 секунд) або за запитом доставляє наступну неприочитану перекладену новину користувачу
-10. Медіа-альбоми надсилаються як група, одиночні фото/відео — з caption
-11. Якщо медіа не вдалося надіслати — відправляється тільки текст
-12. Доставлені новини записуються в `user_news_log` щоб не повторюватись
+*This project started from a simple need: I wanted to learn English without it feeling like homework. If you're learning any language and this idea resonates with you — let's build it together.*
