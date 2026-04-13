@@ -1,8 +1,8 @@
-# 📋 FlipToEnglish — Project vision and roadmap
+# 📋 NewsLingo — Project vision and roadmap
 
 ## 🌍 The big picture
 
-FlipToEnglish started as a personal experiment: I wanted to learn English by reading my favorite Ukrainian news channels in English. But the concept goes far beyond that.
+NewsLingo started as a personal experiment: I wanted to learn English by reading my favorite Ukrainian news channels in English. But the concept goes far beyond that.
 
 **The vision:** A universal Telegram bot that works for any language pair and any country. Imagine:
 
@@ -14,7 +14,7 @@ The core idea is simple: **people already scroll through content every day. Let'
 
 ## 🎯 What makes this different
 
-Most language learning apps force you to learn with artificial content: made-up dialogues, textbook exercises, gamified drills. FlipToEnglish takes a different approach:
+Most language learning apps force you to learn with artificial content: made-up dialogues, textbook exercises, gamified drills. NewsLingo takes a different approach:
 
 - **Real content** — actual news from channels you already follow
 - **Your interests** — you choose what to read, so you're always engaged
@@ -101,7 +101,7 @@ Most language learning apps force you to learn with artificial content: made-up 
 ### Code structure
 
 ```
-FlipToEnglish/
+NewsLingo/
 ├── bot.py              # Telegram bot — user interface and news delivery
 ├── collector.py        # Channel monitor — collects news in real-time
 ├── translator.py       # AI translator — translates to 3 levels
@@ -113,7 +113,9 @@ FlipToEnglish/
     └── ARCHITECTURE.md # Technical architecture details
 ```
 
-## 💬 Contact
+## 💬 Try it & Contact
+
+**Try the bot:** [@NewsLingoUKRBot](https://t.me/NewsLingoUKRBot) — press Start, pick your level, and read Ukrainian news in English.
 
 Have questions or ideas? Open an Issue or reach out. This project is in its early days and every contribution matters.
 

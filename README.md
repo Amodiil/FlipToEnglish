@@ -1,4 +1,4 @@
-# 🔄 FlipToEnglish
+# 🔄 NewsLingo
 
 **Turn your daily news scrolling into a language learning opportunity.**
 
@@ -8,7 +8,7 @@ I was trying to learn English and realized something simple: the best way to lea
 
 I spend a lot of time scrolling Telegram news channels. What if those same channels could be translated into English, at my level? Not textbook English — real news I actually care about, delivered just like a regular Telegram feed.
 
-That's how FlipToEnglish was born.
+That's how NewsLingo was born.
 
 ## 🧪 Current status: Testing the concept
 
@@ -41,9 +41,16 @@ Ukrainian Telegram Channels
   bot.py — delivers translated news to each user at their chosen level
 ```
 
-## 🚀 Quick start
+## 💬 Try it
 
-1. Clone the repo: `git clone https://github.com/YOUR_USERNAME/FlipToEnglish.git`
+The bot is live — search for **@NewsLingoUKRBot** on Telegram or open [t.me/NewsLingoUKRBot](https://t.me/NewsLingoUKRBot), press **Start**, and pick your English level.
+
+## 🚀 Quick start (self-hosting)
+
+> Want to run your own instance? Follow the steps below.
+> Or just use the hosted bot: [@NewsLingoUKRBot](https://t.me/NewsLingoUKRBot)
+
+1. Clone the repo: `git clone https://github.com/YOUR_USERNAME/NewsLingo.git`
 2. Copy `.env.example` to `.env` and fill in your API keys
 3. Install dependencies: `pip install -r requirements.txt`
 4. Run all 3 components in separate terminals:
